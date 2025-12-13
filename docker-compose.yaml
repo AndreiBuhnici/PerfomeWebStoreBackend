@@ -1,0 +1,19 @@
+# For db
+services:
+  postgres:
+    image: postgres:16
+    container_name: perfume
+    restart: always
+    environment:
+      POSTGRES_DB: perfume
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"   # Expose PostgreSQL to the host
+    expose:
+      - "5432"         # Expose PostgreSQL to other containers on the same network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
