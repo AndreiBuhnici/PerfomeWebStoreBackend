@@ -1,0 +1,51 @@
+schema {
+    query: Query
+}
+
+type Query {
+    perfumes: [Perfume]
+    perfumesIds(ids: [ID]): [Perfume]
+    perfume(id: ID): Perfume
+    orders: [Order]
+    ordersByEmail(email: String): [Order]
+}
+
+type Perfume {
+    id: Int
+    perfumeTitle: String
+    perfumer: String
+    year: Int
+    country: String
+    perfumeGender: String
+    fragranceTopNotes: String
+    fragranceMiddleNotes: String
+    fragranceBaseNotes: String
+    description: String
+    filename: String
+    price: Int
+    volume: String
+    type: String
+    perfumeRating: Float
+}
+
+
+type Order {
+    id: Int
+    totalPrice: Float
+    date: String
+    firstName: String
+    lastName: String
+    city: String
+    address: String
+    email: String
+    phoneNumber: String
+    postIndex: Int
+    orderItems: [OrderItem]
+}
+
+type OrderItem {
+    id: Int
+    amount: Int
+    quantity: Int
+    perfume: Perfume
+}

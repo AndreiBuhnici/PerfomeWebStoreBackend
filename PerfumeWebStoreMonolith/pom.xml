@@ -14,10 +14,6 @@
     <packaging>pom</packaging>
     <name>ecommerce</name>
     <description>Ecommerce</description>
-    <modules>
-        <module>ProductAPI</module>
-        <module>NotificationAPI</module>
-    </modules>
 
     <properties>
         <java.version>1.8</java.version>
