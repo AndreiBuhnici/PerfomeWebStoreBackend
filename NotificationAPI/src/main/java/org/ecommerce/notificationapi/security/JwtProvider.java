@@ -1,6 +1,9 @@
-package org.ecommerce.productapi.security;
+package org.ecommerce.notificationapi.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -16,7 +19,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
-import static org.ecommerce.productapi.constants.ErrorMessage.INVALID_JWT_TOKEN;
+import static org.ecommerce.notificationapi.constants.ErrorMessage.INVALID_JWT_TOKEN;
 
 @Component
 @RequiredArgsConstructor
@@ -30,20 +33,6 @@ public class JwtProvider {
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-    }
-
-    public String createMailToken() {
-        Claims claims = Jwts.claims().setSubject("proiectimsperfume");
-        claims.put("role", "NOTIFIER");
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + 30 * 1000);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
     }
 
     public boolean validateToken(String token) {

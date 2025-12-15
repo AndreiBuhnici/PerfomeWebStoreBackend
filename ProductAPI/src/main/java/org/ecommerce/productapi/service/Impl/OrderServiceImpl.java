@@ -3,18 +3,24 @@ package org.ecommerce.productapi.service.Impl;
 import org.ecommerce.productapi.domain.Order;
 import org.ecommerce.productapi.domain.OrderItem;
 import org.ecommerce.productapi.domain.Perfume;
+import org.ecommerce.productapi.dto.MailRequest;
 import org.ecommerce.productapi.exception.ApiRequestException;
 import org.ecommerce.productapi.repository.OrderItemRepository;
 import org.ecommerce.productapi.repository.OrderRepository;
 import org.ecommerce.productapi.repository.PerfumeRepository;
+import org.ecommerce.productapi.security.JwtProvider;
 import org.ecommerce.productapi.service.OrderService;
 import graphql.schema.DataFetcher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +36,11 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final PerfumeRepository perfumeRepository;
+    private final RestTemplate restTemplate;
+    private final JwtProvider jwtProvider;
+
+    private final String notificationApiUrl = "http://spring-app-notification:8091/api/v1/notification/mail";
+
 
     @Override
     public Order getOrderById(Long orderId) {
@@ -69,6 +80,24 @@ public class OrderServiceImpl implements OrderService {
         }
         order.getOrderItems().addAll(orderItemList);
         orderRepository.save(order);
+
+        MailRequest mailRequest = new MailRequest();
+        mailRequest.setTo(order.getEmail());
+        mailRequest.setSubject("Order #" + order.getId());
+        mailRequest.setTemplate("order-template");
+        mailRequest.setAttributes(Map.of("order", order));
+
+        String token = jwtProvider.createMailToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token); // sets Authorization: Bearer <token>
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<MailRequest> entity = new HttpEntity<>(mailRequest, headers);
+
+        // Send POST request
+        restTemplate.postForEntity(notificationApiUrl, entity, Void.class);
+
         return order;
     }
 

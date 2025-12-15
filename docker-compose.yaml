@@ -21,7 +21,7 @@ services:
     volumes:
       - ./migration:/flyway/sql
 
-  spring-app:
+  spring-app-product:
     build: ./ProductAPI
     container_name: product-api
     depends_on:
@@ -33,6 +33,12 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/perfume
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
+
+  spring-app-notification:
+    build: ./NotificationAPI
+    container_name: notification-api
+    ports:
+      - "8091:8091"
 
 volumes:
   postgres_data:

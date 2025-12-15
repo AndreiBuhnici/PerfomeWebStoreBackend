@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class ApplicationConfiguration {
@@ -49,5 +50,10 @@ public class ApplicationConfiguration {
     @Bean
     public SpelAwareProxyProjectionFactory projectionFactory() {
         return new SpelAwareProxyProjectionFactory();
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }

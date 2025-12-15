@@ -1,0 +1,71 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: "ecommerce-spring-reactjs"
+servers:
+  - url: "http://localhost:8091"
+
+tags:
+  - name: "NotificationController"
+
+
+paths:
+  /api/v1/notification/mail:
+    post:
+      tags:
+        - NotificationController
+      summary: Send a mail
+      operationId: sendMail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - to
+                - subject
+                - template
+                - attributes
+              properties:
+                to:
+                  type: string
+                  format: email
+                  example: goatkeeper14@gmail.com
+                subject:
+                  type: string
+                  example: Welcome
+                template:
+                  type: string
+                  example: registration-template
+                attributes:
+                  type: object
+                  additionalProperties: true
+                  example:
+                    firstName: John
+                    registrationUrl: https://example.com/activate
+      responses:
+        "200":
+          description: Mail sent successfully
+
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              example:
+                timestamp: "2025-03-10T12:45:30.123+00:00"
+                status: 400
+                error: "Bad Request"
+                path: "/api/v1/notification/mail"
+      security:
+        - token: []
+
+components:
+  securitySchemes:
+    token:
+      type: apiKey
+      name: Authorization
+      in: header
