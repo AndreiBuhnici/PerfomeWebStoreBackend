@@ -8,7 +8,6 @@ import org.ecommerce.productapi.repository.OrderItemRepository;
 import org.ecommerce.productapi.repository.OrderRepository;
 import org.ecommerce.productapi.repository.PerfumeRepository;
 import org.ecommerce.productapi.service.OrderService;
-import org.ecommerce.productapi.service.email.MailSender;
 import graphql.schema.DataFetcher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,7 +30,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final PerfumeRepository perfumeRepository;
-    private final MailSender mailSender;
 
     @Override
     public Order getOrderById(Long orderId) {
@@ -71,12 +69,6 @@ public class OrderServiceImpl implements OrderService {
         }
         order.getOrderItems().addAll(orderItemList);
         orderRepository.save(order);
-
-        String subject = "Order #" + order.getId();
-        String template = "order-template";
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("order", order);
-        mailSender.sendMessageHtml(order.getEmail(), subject, template, attributes);
         return order;
     }
 

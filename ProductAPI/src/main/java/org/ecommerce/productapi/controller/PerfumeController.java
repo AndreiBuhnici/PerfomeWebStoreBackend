@@ -10,8 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.ecommerce.productapi.constants.PathConstants.*;
@@ -28,6 +32,28 @@ public class PerfumeController {
     public ResponseEntity<List<PerfumeResponse>> getAllPerfumes(@PageableDefault(size = 15) Pageable pageable) {
         HeaderResponse<PerfumeResponse> response = perfumeMapper.getAllPerfumes(pageable);
         return ResponseEntity.ok().headers(response.getHeaders()).body(response.getItems());
+    }
+
+    @PostMapping(ADD)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<FullPerfumeResponse> addPerfume(@RequestPart(name = "file", required = false) MultipartFile file,
+                                                          @RequestPart("perfume") @Valid PerfumeRequest perfume,
+                                                          BindingResult bindingResult) {
+        return ResponseEntity.ok(perfumeMapper.savePerfume(perfume, file, bindingResult));
+    }
+
+    @PostMapping(EDIT)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<FullPerfumeResponse> updatePerfume(@RequestPart(name = "file", required = false) MultipartFile file,
+                                                             @RequestPart("perfume") @Valid PerfumeRequest perfume,
+                                                             BindingResult bindingResult) {
+        return ResponseEntity.ok(perfumeMapper.savePerfume(perfume, file, bindingResult));
+    }
+
+    @DeleteMapping(DELETE_BY_PERFUME_ID)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> deletePerfume(@PathVariable Long perfumeId) {
+        return ResponseEntity.ok(perfumeMapper.deletePerfume(perfumeId));
     }
 
     @GetMapping(PERFUME_ID)

@@ -29,7 +29,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/api/v1/perfumes/**",
-                        "/api/v1/users/cart",
                         "/api/v1/order/**",
                         "/websocket", "/websocket/**",
                         "/img/**",

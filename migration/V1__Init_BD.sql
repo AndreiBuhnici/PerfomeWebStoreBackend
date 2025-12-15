@@ -1,4 +1,5 @@
 create sequence perfume_id_seq start 109 increment 1;
+create sequence users_id_seq start 4 increment 1;
 create sequence order_item_seq start 12 increment 1;
 create sequence orders_seq start 6 increment 1;
 
@@ -52,7 +53,6 @@ create table perfume
     primary key (id)
 );
 
-
 create table perfume_reviews
 (
     perfume_id int8 not null,
@@ -69,13 +69,35 @@ create table review
     primary key (id)
 );
 
+create table user_role
+(
+    user_id int8 not null,
+    roles   varchar(255)
+);
+
+create table users
+(
+    id                  int8    not null,
+    activation_code     varchar(255),
+    active              boolean not null,
+    address             varchar(255),
+    city                varchar(255),
+    email               varchar(255),
+    first_name          varchar(255),
+    last_name           varchar(255),
+    password            varchar(255),
+    password_reset_code varchar(255),
+    phone_number        varchar(255),
+    post_index          varchar(255),
+    provider            varchar(255),
+    primary key (id)
+);
 
 alter table if exists orders_order_items add constraint UK_9d47gapmi35omtannusv6btu3 unique (order_items_id);
+alter table if exists perfume_reviews add constraint UK_gp5u9cs9leiwnbh2rhn27e2w7 unique (reviews_id);
 alter table if exists order_item add constraint FKst073lwr6yongjsmgaravadre foreign key (perfume_id) references perfume;
 alter table if exists orders_order_items add constraint FK7nw03p9mxq154wvbsonaq0qrw foreign key (order_items_id) references order_item;
 alter table if exists orders_order_items add constraint FK3l8rktw0f4w5t6tift31e2d7c foreign key (order_id) references orders;
-
-
-alter table if exists perfume_reviews add constraint UK_gp5u9cs9leiwnbh2rhn27e2w7 unique (reviews_id);
 alter table if exists perfume_reviews add constraint FKq51iuslnvq3nw8teocq9y7ag8 foreign key (reviews_id) references review;
 alter table if exists perfume_reviews add constraint FK7k3k0ru1omu7xdtdamtrl276 foreign key (perfume_id) references perfume;
+alter table if exists user_role add constraint FKj345gk1bovqvfame88rcx7yyx foreign key (user_id) references users;

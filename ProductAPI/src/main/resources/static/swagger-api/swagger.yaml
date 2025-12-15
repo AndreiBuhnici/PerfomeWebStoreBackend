@@ -6,15 +6,14 @@ servers:
   - url: "http://localhost:8090"
 
 tags:
-  - name: "AdminController"
   - name: "PerfumeController"
   - name: "OrderController"
 
 paths:
-  /api/v1/admin/add:
+  /api/v1/perfumes/add:
     post:
       tags:
-        - "AdminController"
+        - "PerfumeController"
       summary: "Add perfume to database"
       operationId: "addPerfume"
       requestBody:
@@ -23,74 +22,75 @@ paths:
           multipart/form-data:
             schema:
               type: object
+              required:
+                - perfume
               properties:
+                perfume:
+                  type: object
+                  required:
+                    - perfumeTitle
+                    - perfumer
+                    - year
+                    - country
+                    - perfumeGender
+                    - fragranceTopNotes
+                    - fragranceMiddleNotes
+                    - fragranceBaseNotes
+                    - price
+                    - volume
+                    - type
+                  properties:
+                    perfumeTitle:
+                      type: string
+                    perfumer:
+                      type: string
+                    year:
+                      type: string
+                    country:
+                      type: string
+                    perfumeGender:
+                      type: string
+                    fragranceTopNotes:
+                      type: string
+                    fragranceMiddleNotes:
+                      type: string
+                    fragranceBaseNotes:
+                      type: string
+                    description:
+                      type: string
+                    price:
+                      type: string
+                    volume:
+                      type: string
+                    type:
+                      type: string
                 file:
                   type: string
                   format: binary
-                perfumeTitle:
-                  type: string
-                perfumer:
-                  type: string
-                year:
-                  type: string
-                country:
-                  type: string
-                perfumeGender:
-                  type: string
-                fragranceTopNotes:
-                  type: string
-                fragranceMiddleNotes:
-                  type: string
-                fragranceBaseNotes:
-                  type: string
-                description:
-                  type: string
-                filename:
-                  type: string
-                price:
-                  type: string
-                volume:
-                  type: string
-                type:
-                  type: string
-              required:
-                - perfumeTitle
-                - perfumer
-                - year
-                - country
-                - perfumeGender
-                - fragranceTopNotes
-                - fragranceMiddleNotes
-                - fragranceBaseNotes
-                - price
-                - volume
-                - type
+            encoding:
+              perfume:
+                contentType: application/json
+
       responses:
         "200":
           description: "OK"
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: "#/components/schemas/FullPerfumeResponse"
-              examples:
-                PerfumeResponse:
-                  $ref: "#/components/schemas/FullPerfumeResponse"
         "400":
           description: "Bad request"
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: "#/components/schemas/PerfumeError"
-              examples:
-                PerfumeError:
-                  $ref: "#/components/schemas/PerfumeError"
       security:
-        - token: []
+        - token: [ ]
 
-  /api/v1/admin/edit:
+  /api/v1/perfumes/edit:
     post:
       tags:
-        - "AdminController"
+        - "PerfumeController"
       summary: "Update perfume"
       operationId: "updatePerfume"
       requestBody:
@@ -163,10 +163,10 @@ paths:
       security:
         - token: []
 
-  /api/v1/admin/delete/{id}:
+  /api/v1/perfumes/delete/{id}:
     delete:
       tags:
-        - "AdminController"
+        - "PerfumeController"
       summary: "Delete perfume"
       operationId: "deletePerfume"
       parameters:
@@ -200,10 +200,10 @@ paths:
       security:
         - token: []
 
-  /api/v1/admin/orders:
+  /api/v1/order/orders:
     get:
       tags:
-        - "AdminController"
+        - "OrderController"
       summary: "Get all orders from database"
       operationId: "getAllOrders"
       parameters: []
@@ -219,10 +219,10 @@ paths:
       security:
         - token: []
 
-  /api/v1/admin/order/{email}:
+  /api/v1/order/{email}:
     get:
       tags:
-        - "AdminController"
+        - "OrderController"
       summary: "Get user orders by email"
       operationId: "getUserOrdersByEmail"
       parameters:
@@ -243,10 +243,10 @@ paths:
       security:
         - token: []
 
-  /api/v1/admin/order/delete/{id}:
+  /api/v1/order/delete/{id}:
     delete:
       tags:
-        - "AdminController"
+        - "OrderController"
       summary: "Delete order"
       operationId: "deleteOrder"
       parameters:
@@ -280,10 +280,10 @@ paths:
       security:
         - token: []
 
-  /api/v1/admin/graphql/orders:
+  /api/v1/order/graphql/orders:
     post:
       tags:
-        - "AdminController"
+        - "OrderController"
       summary: "Get all orders by GraphQL query"
       operationId: "getAllOrdersQuery"
       requestBody:
@@ -308,10 +308,10 @@ paths:
       security:
         - token: []
 
-  /api/v1/admin/graphql/order:
+  /api/v1/order/graphql/order:
     post:
       tags:
-        - "AdminController"
+        - "OrderController"
       summary: "Get orders by user Email GraphQL query"
       operationId: "getUserOrdersByEmailQuery"
       requestBody:

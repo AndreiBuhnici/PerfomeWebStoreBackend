@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,39 @@ public class OrderController {
     @GetMapping(ORDER_ID)
     public ResponseEntity<OrderResponse> getOrderById(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderMapper.getOrderById(orderId));
+    }
+
+    @GetMapping(ORDERS)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<OrderResponse>> getAllOrders(@PageableDefault(size = 10) Pageable pageable) {
+        HeaderResponse<OrderResponse> response = orderMapper.getAllOrders(pageable);
+        return ResponseEntity.ok().headers(response.getHeaders()).body(response.getItems());
+    }
+
+    @GetMapping(ORDER_BY_EMAIL)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<OrderResponse>> getUserOrdersByEmail(@PathVariable String userEmail,
+                                                                    @PageableDefault(size = 10) Pageable pageable) {
+        HeaderResponse<OrderResponse> response = orderMapper.getUserOrders(userEmail, pageable);
+        return ResponseEntity.ok().headers(response.getHeaders()).body(response.getItems());
+    }
+
+    @DeleteMapping(ORDER_DELETE)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> deleteOrder(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderMapper.deleteOrder(orderId));
+    }
+
+    @PostMapping(GRAPHQL_ORDERS)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ExecutionResult> getAllOrdersQuery(@RequestBody GraphQLRequest request) {
+        return ResponseEntity.ok(graphQLProvider.getGraphQL().execute(request.getQuery()));
+    }
+
+    @PostMapping(GRAPHQL_ORDER)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ExecutionResult> getUserOrdersByEmailQuery(@RequestBody GraphQLRequest request) {
+        return ResponseEntity.ok(graphQLProvider.getGraphQL().execute(request.getQuery()));
     }
 
     @GetMapping(ORDER_ID_ITEMS)
