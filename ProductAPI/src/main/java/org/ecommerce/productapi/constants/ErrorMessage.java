@@ -9,4 +9,5 @@ public class ErrorMessage {
     public static final String FILL_IN_THE_INPUT_FIELD = "Fill in the input field";
     public static final String EMPTY_PHONE_NUMBER = "Phone number cannot be empty";
     public static final String EMPTY_POST_INDEX = "Post index cannot be empty";
+    public static final String MAIL_NOT_SENT = "Could not send mail";
 }

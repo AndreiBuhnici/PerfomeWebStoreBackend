@@ -22,6 +22,7 @@ public class NotificationController {
     @PostMapping(MAIL)
     @PreAuthorize("hasAuthority('NOTIFIER')")
     public ResponseEntity<?> sendMail(@RequestBody @Valid MailRequest mailRequest) {
+        System.out.println(mailRequest.getAttributes().get("order"));
         notificationMapper.sendMailAsync(mailRequest);
         return ResponseEntity.accepted().build();
     }
